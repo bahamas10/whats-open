@@ -26,6 +26,9 @@
 			var infowindow;
 			var markers = [];
 
+			if (typeof console === 'undefined') console = {};
+			if (typeof console.log === 'undefined') console.log = function() {};
+
 			function initialize() {
 				// buffalo ny!
 				var initiallocation = new google.maps.LatLng(42.8864, -78.8786);
@@ -36,7 +39,7 @@
 					}, function() {});
 				}
 				var mapOptions = {
-					zoom: 11,
+					zoom: 14,
 					center: initiallocation,
 					mapTypeId: google.maps.MapTypeId.ROADMAP
 				};
@@ -74,16 +77,21 @@
 						var marker = this;
 
 						service.getDetails({
-							reference : marker.get("reference")
+							reference : marker.get('reference')
 							}, function(result) {
-							var html = marker.get("title");
-							if (result && "url" in result) {
-								marker.set("url", result.url);
-							}
+							if (!result) return;
+							var title = marker.get('title') || '';
+							var html = '<b>' + title + '</b><br>';
 
-							if (marker.get("url")) {
-								html = "<a href='" + marker.get("url") + "' target=_blank>" + html + "</a>";
-							}
+							marker.set('url', result.url);
+							var url = marker.get('url');
+							html += '<small>';
+							if (url) html += '<a href="' + url  + '" target=_blank>more info &raquo;</a><br>';
+							if (result.formatted_address) html += result.formatted_address + '<br>';
+							if (result.formatted_phone_number) html += result.formatted_phone_number + '<br>';
+							html += '</small>';
+
+							console.log(result);
 							infowindow.setContent(html);
 							infowindow.open(map, marker);
 						});
