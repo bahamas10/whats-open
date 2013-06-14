@@ -17,9 +17,10 @@
 				top: 100px;
 			}
 		</style>
-		<link href="https://developers.google.com/maps/documentation/javascript/examples/default.css"
-		    rel="stylesheet">
+		<link href="https://developers.google.com/maps/documentation/javascript/examples/default.css" rel="stylesheet">
+		<link href="lib/libnotify.css" rel="stylesheet">
 		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+		<script type="text/javascript" src="lib/humane.min.js"></script>
 		<script>
 			var map;
 			var service;
@@ -89,9 +90,23 @@
 							if (url) html += '<a href="' + url  + '" target=_blank>more info &raquo;</a><br>';
 							if (result.formatted_address) html += result.formatted_address + '<br>';
 							if (result.formatted_phone_number) html += result.formatted_phone_number + '<br>';
+							var periods = result.opening_hours && result.opening_hours.periods && result.opening_hours.periods;
+							if (periods) {
+								var now = Date.now();
+								var deltas = [];
+								for (var i = 0; i < periods.length; i++) {
+									var period = periods[i];
+									var delta = (period.close.nextDate - now) / 1000 / 60;
+									deltas.push(delta);
+								}
+
+								var delta = Math.min.apply(Math, deltas);
+								var hours = Math.floor(delta / 60);
+								var minutes = Math.round(delta - (hours * 60));
+								html += '<br>Closes in ' + hours + ' hours, ' + minutes + ' minutes<br>';
+							}
 							html += '</small>';
 
-							console.log(result);
 							infowindow.setContent(html);
 							infowindow.open(map, marker);
 						});
@@ -115,7 +130,9 @@
 					if (status !== google.maps.places.PlacesServiceStatus.OK) {
 						return;
 					}
-					console.log(results);
+					var s = results.length;
+					if (s === 20) s += ' (max)';
+					humane.log(s + ' results found');
 					createmarkers(results);
 				});
 			}
