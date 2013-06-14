@@ -11,10 +11,21 @@
 				height: 100%;
 				font-family: Helvetica, sans-serif;
 			}
-			button {
+			#buttons {
 				position: absolute;
 				right: 0;
-				top: 100px;
+				top: 50px;
+				text-align: right;
+			}
+			#about {
+				padding: 2px;
+				position: fixed;
+				display: none;
+				bottom: 0;
+				left: 0;
+				width: 300px;
+				font-size: 9pt;
+				background-color: #edd;
 			}
 		</style>
 		<link href="https://developers.google.com/maps/documentation/javascript/examples/default.css" rel="stylesheet">
@@ -25,6 +36,7 @@
 			var map;
 			var service;
 			var infowindow;
+			var about;
 			var markers = [];
 
 			if (typeof console === 'undefined') console = {};
@@ -47,6 +59,7 @@
 				map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 				service = new google.maps.places.PlacesService(map);
 				infowindow = new google.maps.InfoWindow();
+				about = document.getElementById('about');
 				google.maps.event.addListener(map, 'click', infowindow.close.bind(infowindow));
 			}
 
@@ -137,10 +150,27 @@
 				});
 			}
 
+			function toggleabout() {
+				about.style.display = about.style.display === 'block' ? 'none' : 'block';
+			}
+
 		</script>
 	</head>
 	<body>
 		<div id="map-canvas"></div>
-		<button id="refresh" onclick="refresh()">Refresh</button>
+		<div id="buttons">
+			<button id="toggle-about" onclick="toggleabout()">About</button><br><br><br>
+			<button id="refresh" onclick="refresh()">Refresh</button><br>
+		</div>
+		<div id="about">
+			What's Open is a free service that uses Google Maps to show what places are around you are currently open.<br><br>
+			The idea is that at 4 in the morning you want to go somewhere to get food, but you don't know what is open at that hour.
+			What's Open will find all places around you that are currently open, and tell you how long you have until they close.<br><br>
+			You are limited to 20 search results at a time, so if you find you are only seeing 20 search results, try zooming in and searching again
+			by hitting the "refresh" button on the right hand side.<br><br>
+			Created by: <a href="http://www.daveeddy.com" target="new">Dave Eddy</a><br>
+			Idea by: <a href="http://skyeillustration.com" target="new">Skye Illustration</a><br>
+			OpenSourced on: <a href="https://www.github.com/bahamas10/whats-open" target="new">GitHub</a> (MIT License)<br>
+		</div>
 	</body>
 </html>
