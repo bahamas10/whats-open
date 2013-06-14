@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Open</title>
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+		<meta charset="utf-8">
+		<style>
+			html, body, #map-canvas {
+				margin: 0;
+				padding: 0;
+				height: 100%;
+				font-family: Helvetica, sans-serif;
+			}
+			button {
+				position: absolute;
+				right: 0;
+				top: 100px;
+			}
+		</style>
+		<link href="https://developers.google.com/maps/documentation/javascript/examples/default.css"
+		    rel="stylesheet">
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+		<script>
+			var map;
+			var service;
+			var infowindow;
+			var markers = [];
+
+			function initialize() {
+				// buffalo ny!
+				var initiallocation = new google.maps.LatLng(42.8864, -78.8786);
+				if (navigator.geolocation) {
+					navigator.geolocation.getCurrentPosition(function(position) {
+						initiallocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+						map.setCenter(initiallocation);
+					}, function() {});
+				}
+				var mapOptions = {
+					zoom: 11,
+					center: initiallocation,
+					mapTypeId: google.maps.MapTypeId.ROADMAP
+				};
+				map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+				service = new google.maps.places.PlacesService(map);
+				infowindow = new google.maps.InfoWindow();
+
+			}
+
+			function createmarkers(places) {
+				var bounds = new google.maps.LatLngBounds();
+
+				for (var i = 0; i < markers.length; i++) {
+					markers[i].setMap(null);
+				}
+
+				for (var i = 0, place; place = places[i]; i++) {
+					var image = {
+						url: place.icon,
+						size: new google.maps.Size(71, 71),
+						origin: new google.maps.Point(0, 0),
+						anchor: new google.maps.Point(17, 34),
+						scaledSize: new google.maps.Size(25, 25)
+					};
+
+					var marker = new google.maps.Marker({
+						map: map,
+						reference: place.reference,
+						icon: image,
+						title: place.name,
+						position: place.geometry.location
+					});
+					markers.push(marker);
+					google.maps.event.addListener(marker, 'click', function() {
+						var marker = this;
+
+						service.getDetails({
+							reference : marker.get("reference")
+							}, function(result) {
+							var html = marker.get("title");
+							if (result && "url" in result) {
+								marker.set("url", result.url);
+							}
+
+							if (marker.get("url")) {
+								html = "<a href='" + marker.get("url") + "' target=_blank>" + html + "</a>";
+							}
+							infowindow.setContent(html);
+							infowindow.open(map, marker);
+						});
+																															  });
+
+					bounds.extend(place.geometry.location);
+				}
+				//map.fitBounds(bounds);
+			}
+			google.maps.event.addDomListener(window, 'load', initialize);
+
+			function refresh() {
+				var request = {
+					bounds: map.getBounds(),
+					location: map.getCenter(),
+					radius: '1000',
+					openNow: true
+				};
+
+				service.nearbySearch(request, function(results, status, pagination) {
+					if (status !== google.maps.places.PlacesServiceStatus.OK) {
+						return;
+					}
+					console.log(results);
+					createmarkers(results);
+				});
+			}
+
+		</script>
+	</head>
+	<body>
+		<div id="map-canvas"></div>
+		<button id="refresh" onclick="refresh()">Refresh</button>
+	</body>
+</html>
