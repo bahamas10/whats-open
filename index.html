@@ -43,7 +43,7 @@
 				map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 				service = new google.maps.places.PlacesService(map);
 				infowindow = new google.maps.InfoWindow();
-
+				google.maps.event.addListener(map, 'click', infowindow.close.bind(infowindow));
 			}
 
 			function createmarkers(places) {
