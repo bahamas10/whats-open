@@ -3,7 +3,7 @@ whats-open
 
 See what's open currently using Google Maps, useful for finding food at 3am
 
-http://bahamas10.github.io/whats-open
+http://whatsopen.daveeddy.com
 
 Notes
 -----
