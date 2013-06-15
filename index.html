@@ -182,7 +182,6 @@
 				if (navigator.geolocation) {
 					humane.log('locating you...');
 					navigator.geolocation.getCurrentPosition(function(position) {
-						humane.log('location set');
 						map.setCenter(new google.maps.LatLng(position.coords.latitude,position.coords.longitude));
 					}, function() {
 					humane.log('error locating you :(');
