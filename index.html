@@ -49,12 +49,6 @@
 			function initialize() {
 				// buffalo ny!
 				var initiallocation = new google.maps.LatLng(42.8864, -78.8786);
-				if (navigator.geolocation) {
-					navigator.geolocation.getCurrentPosition(function(position) {
-						initiallocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-						map.setCenter(initiallocation);
-					}, function() {});
-				}
 				var mapOptions = {
 					zoom: 15,
 					center: initiallocation,
@@ -65,6 +59,7 @@
 				infowindow = new google.maps.InfoWindow();
 				about = document.getElementById('about');
 				google.maps.event.addListener(map, 'click', infowindow.close.bind(infowindow));
+				findme();
 			}
 
 			function createmarkers(places) {
@@ -180,12 +175,24 @@
 				return strTime;
 			}
 
+			function findme() {
+				if (navigator.geolocation) {
+					humane.log('locating you...');
+					navigator.geolocation.getCurrentPosition(function(position) {
+						map.setCenter(new google.maps.LatLng(position.coords.latitude,position.coords.longitude));
+					}, function() {
+					humane.log('error locating you :(');
+				});
+				}
+			}
+
 		</script>
 	</head>
 	<body>
 		<div id="map-canvas"></div>
 		<div id="buttons">
-			<button id="toggle-about" onclick="toggleabout()">About</button><br><br><br>
+			<button id="toggle-about" onclick="toggleabout()">About</button><br>
+			<button onclick="findme()">Find Me</button><br><br><br>
 			<button onclick="refresh()">All</button><br>
 			<button onclick="refresh('food')">Food</button><br>
 		</div>
