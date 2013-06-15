@@ -40,11 +40,12 @@
 		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
 		<script type="text/javascript" src="lib/humane.min.js"></script>
 		<script>
-			var map;
-			var service;
-			var infowindow;
-			var about;
-			var markers = [];
+			var map; // the map
+			var service; // the places service
+			var infowindow; // the info window, it gets reused
+			var about; // the about div
+			var markers = []; // all visible markers
+			var initialzoom = 14; // default zoom
 
 			if (typeof console === 'undefined') console = {};
 			if (typeof console.log === 'undefined') console.log = function() {};
@@ -53,7 +54,7 @@
 				// buffalo ny!
 				var initiallocation = new google.maps.LatLng(42.8864, -78.8786);
 				var mapOptions = {
-					zoom: 14,
+					zoom: initialzoom,
 					center: initiallocation,
 					mapTypeId: google.maps.MapTypeId.ROADMAP
 				};
@@ -68,10 +69,13 @@
 			function createmarkers(places) {
 				var bounds = new google.maps.LatLngBounds();
 
+				// clear all existing markers
 				for (var i = 0; i < markers.length; i++) {
 					markers[i].setMap(null);
 				}
+				markers.length = 0;
 
+				// loop the places and make markers
 				for (var i = 0, place; place = places[i]; i++) {
 					var image = {
 						url: place.icon,
@@ -192,6 +196,7 @@
 					humane.log('locating you...');
 					navigator.geolocation.getCurrentPosition(function(position) {
 						map.setCenter(new google.maps.LatLng(position.coords.latitude,position.coords.longitude));
+						map.setZoom(initialzoom);
 					}, function() {
 					humane.log('error locating you :(');
 					});
