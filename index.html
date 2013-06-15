@@ -31,6 +31,9 @@
 				font-size: 9pt;
 				background-color: #edd;
 			}
+			@media only screen and (max-width: 767px) {
+				#buttons button { font-size: 12pt; }
+			}
 		</style>
 		<link href="https://developers.google.com/maps/documentation/javascript/examples/default.css" rel="stylesheet">
 		<link href="lib/libnotify.css" rel="stylesheet">
@@ -50,7 +53,7 @@
 				// buffalo ny!
 				var initiallocation = new google.maps.LatLng(42.8864, -78.8786);
 				var mapOptions = {
-					zoom: 15,
+					zoom: 14,
 					center: initiallocation,
 					mapTypeId: google.maps.MapTypeId.ROADMAP
 				};
@@ -183,7 +186,9 @@
 						map.setCenter(new google.maps.LatLng(position.coords.latitude,position.coords.longitude));
 					}, function() {
 					humane.log('error locating you :(');
-				});
+					});
+				} else {
+					humane.log('not supported');
 				}
 			}
 
