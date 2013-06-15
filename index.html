@@ -165,13 +165,17 @@
 						break;
 				}
 				service.nearbySearch(request, function(results, status, pagination) {
-					if (status !== google.maps.places.PlacesServiceStatus.OK) {
+					if (status === google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
+						results = [];
+					} else if (status !== google.maps.places.PlacesServiceStatus.OK) {
+						humane.log('error: ' + status);
 						return;
 					}
 					var s = results.length;
 					if (s === 20) s += ' (max)';
-					humane.log(s + ' results found');
-					createmarkers(results);
+					var res = s === 1 ? 'result' : 'results';
+					humane.log(s + ' ' + res + ' found');
+					if (s) createmarkers(results);
 				});
 			}
 
