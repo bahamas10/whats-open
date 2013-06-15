@@ -111,8 +111,10 @@
 								var deltas = [];
 								for (var i = 0; i < periods.length; i++) {
 									var period = periods[i];
-									var delta = (period.close.nextDate - now);
-									deltas.push(delta);
+									if (period.close && period.close.nextDate) {
+										var delta = (period.close.nextDate - now);
+										deltas.push(delta);
+									}
 								}
 
 								var delta = Math.min.apply(Math, deltas);
