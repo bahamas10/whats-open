@@ -37,15 +37,16 @@
 		</style>
 		<link href="https://developers.google.com/maps/documentation/javascript/examples/default.css" rel="stylesheet">
 		<link href="lib/libnotify.css" rel="stylesheet">
-		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=true"></script>
 		<script type="text/javascript" src="lib/humane.min.js"></script>
 		<script>
-			var map; // the map
-			var service; // the places service
-			var infowindow; // the info window, it gets reused
 			var about; // the about div
-			var markers = []; // all visible markers
+			var circle; // users location
+			var infowindow; // the info window, it gets reused
 			var initialzoom = 14; // default zoom
+			var map; // the map
+			var markers = []; // all visible markers
+			var service; // the places service
 
 			if (typeof console === 'undefined') console = {};
 			if (typeof console.log === 'undefined') console.log = function() {};
@@ -101,7 +102,6 @@
 								humane.log('failed to lookup details');
 								return;
 							}
-							console.log(result);
 							var title = marker.get('title') || '';
 							var html = '<b>' + title + '</b><br>';
 
@@ -200,7 +200,18 @@
 					humane.log('locating you...');
 					navigator.geolocation.getCurrentPosition(function(position) {
 						map.setCenter(new google.maps.LatLng(position.coords.latitude,position.coords.longitude));
-						map.setZoom(initialzoom);
+						if (circle) circle.setMap(null);
+						circle = new google.maps.Circle({
+							center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+							radius: position.coords.accuracy,
+							map: map,
+							fillColor: '#0000FF',
+							fillOpacity: 0.2,
+							strokeColor: '#0000FF',
+							strokeOpacity: 0.5
+						});
+						map.fitBounds(circle.getBounds());
+						if (map.getZoom() > 17) map.setZoom(17);
 					}, function() {
 					humane.log('error locating you :(');
 					});
