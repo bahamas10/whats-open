@@ -6,6 +6,9 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta charset="utf-8">
 		<style>
+			* {
+				box-sizing: border-box;
+			}
 			html, body, #map-canvas {
 				margin: 0;
 				padding: 0;
@@ -22,12 +25,15 @@
 				font-size: 14pt;
 			}
 			#about {
+				display: none;
 				padding: 2px;
 				position: fixed;
-				display: none;
 				bottom: 0;
 				left: 0;
-				width: 300px;
+
+				width: 100%;
+				max-width: 500px;
+
 				font-size: 9pt;
 				background-color: #edd;
 				border: 1px solid black;
@@ -178,7 +184,7 @@
 					var s = results.length;
 					if (s === 20) s += ' (max)';
 					var res = s === 1 ? 'result' : 'results';
-					humane.log(s + ' ' + res + ' found');
+					humane.log(s + ' ' + res + ' found for ' + (t || 'all'));
 					if (s) createmarkers(results);
 				});
 			}
