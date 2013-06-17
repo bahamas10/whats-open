@@ -162,6 +162,9 @@
 					case 'food':
 						request.types = ['food'];
 						break;
+					case 'pizza':
+						request.types = ['food'];
+						request.keyword = 'pizza';
 					default:
 						break;
 				}
@@ -230,6 +233,7 @@
 			<button onclick="findme()">Find Me</button><br><br><br>
 			<button onclick="refresh()">All</button><br>
 			<button onclick="refresh('food')">Food</button><br>
+			<button onclick="refresh('pizza')">Pizza</button><br>
 		</div>
 		<div id="about">
 			<button onclick="toggleabout()" style="float: right;">X</button>
