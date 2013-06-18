@@ -58,6 +58,8 @@
 			if (typeof console === 'undefined') console = {};
 			if (typeof console.log === 'undefined') console.log = function() {};
 
+			window.addEventListener('load', initialize);
+
 			function initialize() {
 				// buffalo ny!
 				var initiallocation = new google.maps.LatLng(42.8864, -78.8786);
@@ -154,7 +156,6 @@
 				}
 				//map.fitBounds(bounds);
 			}
-			google.maps.event.addDomListener(window, 'load', initialize);
 
 			function refresh(t) {
 				var request = {
