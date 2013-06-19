@@ -3,12 +3,14 @@ whats-open
 
 See what's open currently using Google Maps, useful for finding food at 3am
 
-http://whatsopen.daveeddy.com
+[http://whatsopen.daveeddy.com](http://whatsopen.daveeddy.com)
+
+![whats-open-screenshot](http://daveeddy.com/static/media/github/whats-open/whats-open.png)
 
 Credits
 -------
 
-- [Google Maps JavaScript API](https://developers.google.com/maps/documentation/javascript/)
+- [Google Maps JavaScript API](https://developers.google.com/maps/documentation/javascript/) - The map and the information you see
 - [humane.js](http://wavded.github.io/humane-js/) - Growl type notifications
 
 Notes
