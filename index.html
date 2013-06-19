@@ -47,6 +47,7 @@
 		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=true"></script>
 		<script type="text/javascript" src="lib/humane.min.js"></script>
 		<script>
+			var properurl = 'http://www.daveeddy.com';
 			var about; // the about div
 			var circle; // users location
 			var infowindow; // the info window, it gets reused
@@ -54,6 +55,10 @@
 			var map; // the map
 			var markers = []; // all visible markers
 			var service; // the places service
+
+			// force redirect from github
+			if (window.location.href.indexOf('github') > -1)
+				window.location.replace(properurl);
 
 			if (typeof console === 'undefined') console = {};
 			if (typeof console.log === 'undefined') console.log = function() {};
