@@ -146,8 +146,13 @@
 									var hours = Math.floor(delta / 60);
 									var minutes = Math.round(delta - (hours * 60));
 									html += '<br>Closes at ' + formatAMPM(d) + '<br>';
-									html += hours ? (hours + ' hours, ') : '';
-									html +=  minutes + ' minutes from now<br>';
+									if (hours) {
+										html += hours;
+										html += hours === 1 ? ' hour, ' : ' hours, ';
+									}
+									html += minutes;
+									html += minutes === 1 ? ' minute' : ' minutes';
+									html += ' from now<br>';
 								}
 
 							}
