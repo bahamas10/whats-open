@@ -3,7 +3,7 @@ whats-open
 
 See what's open currently using Google Maps, useful for finding food at 3am
 
-[http://whatsopen.daveeddy.com](http://whatsopen.daveeddy.com)
+[http://whatsopen.pw](http://whatsopen.pw)
 
 ![whats-open-screenshot](http://daveeddy.com/static/media/github/whats-open/whats-open.png)
 
