@@ -82,7 +82,9 @@
 				var mapcanvas = document.getElementById('map-canvas');
 				map = new google.maps.Map(mapcanvas, mapOptions);
 				service = new google.maps.places.PlacesService(map);
-				infowindow = new google.maps.InfoWindow();
+				infowindow = new google.maps.InfoWindow({
+					pixelOffset: new google.maps.Size(-20, 0)
+				});
 				about = document.getElementById('about');
 				searchfield = document.getElementById('search-field');
 				google.maps.event.addListener(map, 'click', infowindow.close.bind(infowindow));
