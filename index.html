@@ -22,8 +22,13 @@
 				top: 50px;
 				text-align: right;
 			}
-			#buttons button {
+			#buttons button, #buttons input {
 				font-size: 14pt;
+			}
+			#search-field {
+				max-width: 100px;
+				text-align: right;
+				text-overflow: ellipsis;
 			}
 			#about {
 				display: none;
@@ -43,7 +48,6 @@
 				#buttons button { font-size: 12pt; }
 			}
 		</style>
-		<link href="https://developers.google.com/maps/documentation/javascript/examples/default.css" rel="stylesheet">
 		<link href="lib/libnotify.css" rel="stylesheet">
 		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=true"></script>
 		<script type="text/javascript" src="lib/humane.min.js"></script>
@@ -56,6 +60,7 @@
 			var map; // the map
 			var markers = []; // all visible markers
 			var service; // the places service
+			var searchfield; // search field
 
 			// force redirect from github
 			if (window.location.href.indexOf('github') > -1)
@@ -74,11 +79,21 @@
 					center: initiallocation,
 					mapTypeId: google.maps.MapTypeId.ROADMAP
 				};
-				map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+				var mapcanvas = document.getElementById('map-canvas');
+				map = new google.maps.Map(mapcanvas, mapOptions);
 				service = new google.maps.places.PlacesService(map);
 				infowindow = new google.maps.InfoWindow();
 				about = document.getElementById('about');
+				searchfield = document.getElementById('search-field');
 				google.maps.event.addListener(map, 'click', infowindow.close.bind(infowindow));
+
+				searchfield.onkeydown = function(e) {
+					if (e.keyCode !== 13)
+						return;
+					refresh(this.value);
+					this.blur();
+				};
+
 				findme();
 			}
 
@@ -177,6 +192,8 @@
 				};
 
 				switch (t) {
+					case 'all':
+						break;
 					case 'food':
 						request.types = ['food'];
 						break;
@@ -184,6 +201,7 @@
 						request.types = ['food'];
 						request.keyword = 'pizza';
 					default:
+						request.keyword = t;
 						break;
 				}
 				service.nearbySearch(request, function(results, status, pagination) {
@@ -234,6 +252,7 @@
 						});
 						map.fitBounds(circle.getBounds());
 						if (map.getZoom() > 17) map.setZoom(17);
+						refresh('all');
 					}, function() {
 					humane.log('error locating you :(');
 					});
@@ -249,9 +268,10 @@
 		<div id="buttons">
 			<button id="toggle-about" onclick="toggleabout()">About</button><br>
 			<button onclick="findme()">Find Me</button><br><br><br>
-			<button onclick="refresh()">All</button><br>
-			<button onclick="refresh('food')">Food</button><br>
-			<button onclick="refresh('pizza')">Pizza</button><br>
+			<button onclick="refresh('all');">All</button><br>
+			<button onclick="refresh('food');">Food</button><br>
+			<button onclick="refresh('pizza');">Pizza</button><br>
+			<input type="text" id="search-field" placeholder="search..." /><br>
 		</div>
 		<div id="about">
 			<button onclick="toggleabout()" style="float: right;">X</button>
